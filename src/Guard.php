@@ -85,6 +85,8 @@ class Guard
      */
     protected function getUser() {
         $guards = config('airlock.guards');
+        
+        array_push($guards,'web');
 
         $user = null;
         foreach($guards as $guard) {
