@@ -42,7 +42,7 @@ class Guard
      */
     public function __invoke(Request $request)
     {
-        if ($user = $this->auth->guard('web')->user()) {
+        if ($user = $this->getUser()) {
             return $this->supportsTokens($user)
                         ? $user->withAccessToken(new TransientToken)
                         : $user;
@@ -76,5 +76,23 @@ class Guard
         return in_array(HasApiTokens::class, class_uses_recursive(
             $tokenable ? get_class($tokenable) : null
         ));
+    }
+    
+    /**
+     * Get the correct user using the providers config
+     *
+     * @return mixed
+     */
+    protected function getUser() {
+        $providers = config('airlock.providers');
+
+        $user = null;
+        foreach($providers as $provider) {
+            if ($user = $this->auth->guard($provider)->user()) {
+                break;
+            }
+        }
+        
+        return $user;
     }
 }
