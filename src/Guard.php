@@ -84,11 +84,11 @@ class Guard
      * @return mixed
      */
     protected function getUser() {
-        $providers = config('airlock.providers');
+        $guards = config('airlock.guards');
 
         $user = null;
-        foreach($providers as $provider) {
-            if ($user = $this->auth->guard($provider)->user()) {
+        foreach($guards as $guard) {
+            if ($user = $this->auth->guard($guard)->user()) {
                 break;
             }
         }
