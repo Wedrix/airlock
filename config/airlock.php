@@ -55,7 +55,6 @@ return [
     */
 
     'guard_map' => [
-        'api/v1/seller/*' => 'sellers-spa',
-        'api/v1/customer/*' => 'customers-spa'
+        'api/*' => 'web',
     ],
 ];
