@@ -43,4 +43,19 @@ return [
         'verify_csrf_token' => App\Http\Middleware\VerifyCsrfToken::class,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Airlock Guard Map For Multi Guard
+    |--------------------------------------------------------------------------
+    |
+    | Specify the guards airlock should use in authenticating users for SPA Implementation
+    | Use path pattern as key
+    | Supported guards must use the session driver
+    |
+    */
+
+    'guard_map' => [
+        'api/v1/seller/*' => 'sellers-spa',
+        'api/v1/customer/*' => 'customers-spa'
+    ],
 ];
