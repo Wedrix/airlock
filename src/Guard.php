@@ -42,7 +42,9 @@ class Guard
      */
     public function __invoke(Request $request)
     {
-        if ($user = $this->getUser()) {
+        $guard = $this->getGuard($request);
+
+        if ($user = $this->auth->guard($guard)->user()) {
             return $this->supportsTokens($user)
                         ? $user->withAccessToken(new TransientToken)
                         : $user;
@@ -77,22 +79,23 @@ class Guard
             $tokenable ? get_class($tokenable) : null
         ));
     }
-    
-    /**
-     * Get the correct user using the providers config
-     *
-     * @return mixed
-     */
-    protected function getUser() {
-        $guards = config('airlock.guards');
 
-        $user = null;
-        foreach($guards as $guard) {
-            if ($user = $this->auth->guard($guard)->user()) {
-                break;
+    /**
+     * Get the appropriate path based guard for spa authentication
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return string
+     */
+    protected function getGuard(Request $request)
+    {
+        $guardMap = config('airlock.guard_map');
+
+        foreach($guardMap as $pathPattern => $usedGuard) {
+            if ($request->is($pathPattern)) {
+                return $usedGuard;
             }
         }
-        
-        return $user;
+
+        return 'web';
     }
 }
